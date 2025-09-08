@@ -8,7 +8,7 @@ import omegaconf
 from utils.logger import prepare_logging
 from torch.utils.data import DataLoader
 from data.datasets import get_datasets
-from models.model import NamingEnhancementModel
+from models.model import NamedCurves
 from utils.setup_optim_scheduler import get_optimizer_scheduler
 from utils.evaluator import Evaluator
 from utils.setup_criterion import get_criterion
@@ -39,7 +39,7 @@ def main(config: omegaconf.DictConfig):
         valid_loader = None
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
-    model = NamingEnhancementModel(config.model)
+    model = NamedCurves(config.model)
     if config.model.ckpt_path is not None:
         model.load_state_dict(torch.load(config.model.ckpt_path)["model_state_dict"])
     model.cuda()
