@@ -19,10 +19,9 @@ class LocalFusion(nn.Module):
             else:
                 return torch.mean(torch.stack([att(x_color, q=q) for att, x_color in zip(self.attention_fusion, x)], dim=0))
 
-        # Using the color naming probabilities to compute the blending. Weighted average with color naming probs as
-        # weights.
+        # Using the color naming probabilities to compute the blending. Weighted average with color naming probs as weights.
         else:
-            color_naming_probs = (color_naming_probs > 0.20).float()
+            color_naming_probs = (color_naming_probs > 0.20).float()  # 这三行为了实现论文3.4节末尾所说，概率图大于0.2的像素加权平均
             color_naming_avg = torch.sum(color_naming_probs, dim=0).unsqueeze(1).repeat(1, 3, 1, 1)
             color_naming_probs = color_naming_probs.unsqueeze(2).repeat(1, 1, 3, 1, 1)
 
@@ -91,7 +90,8 @@ class Self_Attn(nn.Module):
         m_batch_size, C, width, height = x.size()
         proj_query = self.query_conv(q).view(m_batch_size, -1, int((width//self.down_ratio)*(height//self.down_ratio))).permute(0, 2, 1)
         proj_key = self.key_conv(x).view(m_batch_size, -1, int((width//self.down_ratio)*(height//self.down_ratio)))
-        energy = torch.bmm(proj_query, proj_key)
+        energy = torch.bmm(proj_query, proj_key)  # batch matrix-matrix multiplication（批量矩阵乘法）
+        # 输入和输出都是三维张量，等价于对每个batch的张量分别做矩阵乘法，就是很多次矩阵乘法打包成一次。
         attention = self.softmax(energy)
         proj_value = self.value_conv(x).view(m_batch_size, -1, int((width//self.down_ratio)*(height//self.down_ratio)))
 

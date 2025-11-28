@@ -26,7 +26,7 @@ data:
         params:
             input_path: /home/dserrano/Documents/datasets/FiveK-UEGAN/input
             target_path: /home/dserrano/Documents/datasets/FiveK-UEGAN/expertC_gt
-            img_ids_filepath: /home/dserrano/Workspace/DeepLPF/adobe5k_upe/images_train.txt
+            img_ids_filepath: /home/dserrano/Workspace/DeepLPF/adobe5k_upe/images_train.txt  # 数据中前面的序号写成的文件，用来决定用数据集中哪些数据来训练
             transform:
                 - type: RandomCrop
                   params:

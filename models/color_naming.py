@@ -32,7 +32,7 @@ class ColorNaming():
             self.color_categories = [[2,5,10], [0,3,9], [6,7], [8], [4], [1]]
             self.color_categories = [torch.tensor(x).to(device) for x in self.color_categories]
 
-    def __call__(self, input_tensor):
+    def __call__(self, input_tensor):  # 输入是backbone的输出，形状[B, 3, H, W]
         """Converts an RGB image to a color naming image.
 
         Args:
@@ -45,10 +45,9 @@ class ColorNaming():
         input_tensor = torch.clamp(input_tensor, 0, 1)
         img = (input_tensor * 255).int()
 
-        index_tensor = torch.floor(
-            img[:, 0, ...].view(img.shape[0], -1) / 8).long() + 32 * torch.floor(
-            img[:, 1, ...].view(img.shape[0], -1) / 8).long() + 32 * 32 * torch.floor(
-            img[:, 2, ...].view(img.shape[0], -1) / 8).long()
+        index_tensor = (torch.floor(img[:, 0, ...].view(img.shape[0], -1) / 8).long()
+                        + 32 * torch.floor(img[:, 1, ...].view(img.shape[0], -1) / 8).long()
+                        + 32 * 32 * torch.floor(img[:, 2, ...].view(img.shape[0], -1) / 8).long())
 
         prob_maps = []
         for w2cM in self.matrix.permute(*torch.arange(self.matrix.ndim-1, -1, -1)):

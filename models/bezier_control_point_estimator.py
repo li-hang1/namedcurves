@@ -45,14 +45,14 @@ class BezierColorBranch(nn.Module):
         self.sigmoid = nn.Sigmoid()
 
     def create_control_points(self, x):
-        x = torch.cumsum(torch.cat([torch.zeros_like(x[..., :1]), x], dim=-1), dim=-1)
+        x = torch.cumsum(torch.cat([torch.zeros_like(x[..., :1]), x], dim=-1), dim=-1)  # [B, 3, 11]，第一列增加一列0，然后累计求和，为得到论文中2式做准备
         x = torch.stack([x, torch.linspace(0, 1, steps=self.num_control_points+1).unsqueeze(0).repeat(x.shape[0], x.shape[1], 1).cuda()], dim=-1)
         return x
 
     def forward(self, x):
-        x = self.color_branch(x).view(x.size(0), 3, self.num_control_points)
-        x = self.sigmoid(x)
-        x = x / torch.sum(x, dim=2)[..., None]
+        x = self.color_branch(x).view(x.size(0), 3, self.num_control_points)  # [B, 3, 10]
+        x = self.sigmoid(x)  # [B, 3, 10]，这个张量中每个值就是论文第七页3.3节中的ΔP，这个x就是论文中图5的输出网格
+        x = x / torch.sum(x, dim=2)[..., None]  # [B, 3, 10]
         x = self.create_control_points(x)
         return x
 
@@ -79,7 +79,7 @@ class BCPE(nn.Module):
 
         n = control_points.shape[2]
         output = torch.zeros_like(x)
-        for j in range(n):
+        for j in range(n):  # 这步就是计算伯恩斯坦多项式，其中求和用for循环和+=实现
             output += control_points[..., j, 0].view(control_points.shape[0], control_points.shape[1], 1, 1) * self.binomial_coefficient(n - 1, j) * (1 - x) ** (n - 1 - j) * x ** j
         return output
 

@@ -180,7 +180,7 @@ class Backbone(nn.Module):
             encoders.append(
                 nn.Sequential(
                     nn.Conv2d(input_dim, encoder_dim, kernel_size=3, padding=1),
-                    BaseBlock(encoder_dim),
+                    BaseBlock(encoder_dim),  # BaseBlock内通道数一直是encoder_dim
                     BaseBlock(encoder_dim),
                     AttentionBlock(encoder_dim),
                 )
@@ -209,7 +209,7 @@ class Backbone(nn.Module):
                 ResidualConnection(in_channels=decoder_dim)
             )
         self._residual_connections = nn.ModuleList(residual_connections)
-    def forward(self, x: torch.Tensor):
+    def forward(self, x: torch.Tensor):  # 输入是原图，形状[B, C, H, W]
         if len(x.shape) != 4:
             raise ValueError(f"Expected [B, C, H, W] input, got {x.shape}.")
         global_residual = x
