@@ -30,8 +30,8 @@ class MIT5KDataset(Dataset):
     def _create_data_list(self):
         # Create a list of dictionaries with 'input_path', 'target_path' and 'name'
         data_list = []
-        for input_file in glob(os.path.join(self.input_path, "*")):
-            img_id = os.path.basename(input_file).split('-')[0]
+        for input_file in glob(os.path.join(self.input_path, "*")):  # glob.glob()返回一个列表，元素是字符串类型的路径名
+            img_id = os.path.basename(input_file).split('_')[0]
             if img_id in self.img_ids:
                 target_file = os.path.join(self.target_path, os.path.basename(os.path.basename(input_file)))
                 if not os.path.exists(target_file):
@@ -48,7 +48,7 @@ class MIT5KDataset(Dataset):
         input_image, target_image = self._load_image_pair(data['input_path'], data['target_path'])
 
         return {'input_image': input_image, 'target_image': target_image, 'name':data['name']}
-
+        # __getitem__返回一个字典，DataLoader会自动将同键名的元素按维度 0 堆叠
     def _load_image_pair(self, img1_path, img2_path):
         img1_tensor = to_tensor(np.array(Image.open(img1_path).convert('RGB')))
         img2_tensor = to_tensor(np.array(Image.open(img2_path).convert('RGB')))

@@ -9,9 +9,9 @@ from torchvision.transforms import functional as TF
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input_path', type=str, default='assets/a4957-input.png')
+    parser.add_argument('--input_path', type=str, default='assets/input.png')
     parser.add_argument('--output_path', type=str, default='output/')
-    parser.add_argument('--model_path', type=str, default='/home/dserrano/Workspace/Color-Naming-Image-Enhancement/pretrained/mit5k_uegan_psnr_25.59.pth')
+    parser.add_argument('--model_path', type=str, default='/root/namedcurves/logs/log_20251201_152821/.pth')
     parser.add_argument('--config_path', type=str, default='configs/mit5k_dpe_config.yaml')
     return parser.parse_args()
 

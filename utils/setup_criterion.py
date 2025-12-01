@@ -1,5 +1,5 @@
 from torch import nn
-from torchmetrics import StructuralSimilarityIndexMeasure as SSIM
+from torchmetrics.image import StructuralSimilarityIndexMeasure
 
 class BackboneL2SSIMLoss(nn.Module):
     def __init__(self, ssim_window_size=5, alpha=0.5):

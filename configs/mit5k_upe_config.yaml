@@ -24,16 +24,16 @@ data:
     train:
         target: mit5k
         params:
-            input_path: /home/dserrano/Documents/datasets/FiveK-UEGAN/input
-            target_path: /home/dserrano/Documents/datasets/FiveK-UEGAN/expertC_gt
-            img_ids_filepath: /home/dserrano/Workspace/DeepLPF/adobe5k_upe/images_train.txt  # 数据中前面的序号写成的文件，用来决定用数据集中哪些数据来训练
+            input_path: /root/dataset/source/
+            target_path: /root/dataset/target/
+            img_ids_filepath: /root/images_train.txt  # 数据中前面的序号写成的文件，用来决定用数据集中哪些数据来训练
             transform:
-                - type: RandomCrop
+                - type: RandomCrop  # 在 YAML 文件中，- 开头的行代表“列表项(list item)”
                   params:
-                    size: [ 256, 256 ]
+                    size: [ 512, 512 ]
                 - type: Resize
                   params:
-                    size: 256
+                    size: 512
                 - type: RandomHorizontalFlip
                   params:
                     p: 0.5
@@ -44,14 +44,14 @@ data:
     test:
         target: mit5k
         params:
-            input_path: /home/dserrano/Documents/datasets/FiveK-UEGAN/input
-            target_path: /home/dserrano/Documents/datasets/FiveK-UEGAN/expertC_gt
-            img_ids_filepath: /home/dserrano/Workspace/DeepLPF/adobe5k_upe/images_train.txt
+            input_path: /root/val/source/
+            target_path: /root/val/target/
+            img_ids_filepath: /root/images_val.txt
 
 train:
-    cuda_visible_device: 0
+    cuda_visible_device: 0,1,2,3
     batch_size: 8
-    epochs: 100
+    epochs: 10
     valid_every: 1
     optimizer:
         type: Adam

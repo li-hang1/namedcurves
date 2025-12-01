@@ -1,5 +1,4 @@
 import torch
-from torch.optim import lr_scheduler
 
 def get_optimizer_scheduler(model, optim_config, scheduler_config):
     optimizer = getattr(torch.optim, optim_config.type)(model.parameters(), **optim_config.params)

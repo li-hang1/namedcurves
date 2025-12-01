@@ -1,7 +1,7 @@
 import torch
 import logging
-from torchmetrics import PeakSignalNoiseRatio as PSNR
-from torchmetrics import StructuralSimilarityIndexMeasure as SSIM
+from torchmetrics.image import PeakSignalNoiseRatio as PSNR
+from torchmetrics.image import StructuralSimilarityIndexMeasure as SSIM
 from lpips import LPIPS
 from utils.deltaE import deltaEab, deltaE00
 
@@ -11,7 +11,7 @@ class Evaluator():
         self._create_metrics(metrics)
         self.split_name = split_name
         self.log_dirpath = log_dirpath
-        self.best_metric = best_metric
+        self.best_metric = best_metric  # best_metric 就是 yaml 中的 metric_to_save
         self.best_value = 0
 
     def _create_metrics(self, metrics):
